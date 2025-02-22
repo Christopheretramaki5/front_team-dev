@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth, USER_TYPES } from "../contexts/AuthContext";
+import { FaSearch } from "react-icons/fa";
 
 const NavBar = () => {
   const { userType, logout } = useAuth();
@@ -14,13 +15,16 @@ const NavBar = () => {
     <div className="navbar flex items-center justify-between bg-blue-600 text-white p-4 shadow-md w-full overflow-hidden">
       <div className="logo text-xl font-bold">E-Shop</div>
 
-      {/* Barre de recherche centrée */}
+      {/* Barre de recherche centrée avec icône */}
       <div className="flex-grow flex justify-center">
-        <input
-          type="text"
-          placeholder="Rechercher des produits..."
-          className="w-1/3 p-2 rounded-lg text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div className="relative w-1/3">
+          <input 
+            type="text" 
+            placeholder="Rechercher des produits..." 
+            className="w-full p-2 pl-10 rounded-lg text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        </div>
       </div>
 
       <div className="nav-links flex items-center gap-4">
@@ -55,7 +59,7 @@ const NavBar = () => {
             <Link to="/" className={isActive("/")}>Home</Link>
             <Link to="/login" className={isActive("/login")}>
               <span className="flex items-center gap-1">
-              <span className="text-xl">👤</span>
+                <span className="text-xl">👤</span>
                 <span>My Profile</span>
               </span>
             </Link>
