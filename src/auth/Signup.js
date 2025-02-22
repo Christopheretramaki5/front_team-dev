@@ -58,8 +58,8 @@ const SignupPage = () => {
 
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-50 to-gray-50">
-            <div className="bg-white rounded-2xl shadow-lg p-8 w-96 text-center">
+        <div className="flex items-center justify-center min-h-[88vh] bg-gradient-to-r from-gray-50 to-gray-50 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md text-center">
                 <div className="flex justify-center mb-4">
                     <FaUser className="text-blue-600 text-4xl" />
                 </div>
@@ -99,22 +99,23 @@ const SignupPage = () => {
                         </div>
                     </div>
 
+                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 mt-6">
+                        SIGN UP
+                    </button>
 
-                    <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 mt-6">SIGN UP</button>
-                    
-                    
-                    {/* Lien vers la page d'inscription */}
+                    {/* Lien vers la page de connexion */}
                     <div className="mt-4 text-center">
                         <span className="text-sm text-gray-600">Déjà un compte? </span>
                         <a href="/login" className="text-blue-500 hover:underline">Se connecter</a>
                     </div>
-
                 </form>
             </div>
+
             {/* Notification Toast (messages d'erreur, succès, etc.) */}
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
         </div>
     );
+
 };
 
 export default SignupPage;

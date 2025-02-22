@@ -5,41 +5,64 @@ import { useAuth, USER_TYPES } from "../contexts/AuthContext";
 const NavBar = () => {
   const { userType, logout } = useAuth();
   const location = useLocation(); // Récupère l'URL actuelle
+  const cartItemCount = 3; // Remplacez par une variable dynamique selon votre logique
 
   // Fonction pour vérifier si le lien est actif
   const isActive = (path) => location.pathname === path ? "active-link" : "";
 
   return (
-    <div className="navbar">
-      {/* Liens pour les utilisateurs connectés */}
-      {userType === USER_TYPES.NORMAL_USER && (
-        <>
-          <Link to="/" className={isActive("/")}>Home</Link>
-          <Link to="/user" className={isActive("/user")}>User Dashboard</Link>
-          <Link to="/myProfile" className={isActive("/myProfile")}>Profile</Link>
-          <button onClick={logout} className="logout-button">Logout</button>
-        </>
-      )}
+    <div className="navbar flex items-center justify-between bg-blue-600 text-white p-4 shadow-md w-full overflow-hidden">
+      <div className="logo text-xl font-bold">E-Shop</div>
 
-      {userType === USER_TYPES.ADMIN_USER && (
-        <>
-          <Link to="/admin" className={isActive("/admin")}>Admin Dashboard</Link>
-          <Link to="/myProfile" className={isActive("/myProfile")}>Profile</Link>
-          <button onClick={logout} className="logout-button">Logout</button>
-        </>
-      )}
+      {/* Barre de recherche centrée */}
+      <div className="flex-grow flex justify-center">
+        <input
+          type="text"
+          placeholder="Rechercher des produits..."
+          className="w-1/3 p-2 rounded-lg text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-      {/* Liens pour les utilisateurs non connectés */}
-      {userType === USER_TYPES.PUBLIC && (
-        <>
-          <Link to="/" className={isActive("/")}>Home</Link>
-          <Link to="/login" className={isActive("/login")}>Login</Link>
-          <Link to="/signup" className={isActive("/signup")}>Signup</Link>
-        </>
-      )}
+      <div className="nav-links flex items-center gap-4">
+        {userType === USER_TYPES.NORMAL_USER && (
+          <>
+            <Link to="/" className={isActive("/")}>Home</Link>
+            <Link to="/user" className={isActive("/user")}>User Dashboard</Link>
+            <Link to="/myProfile" className={isActive("/myProfile")}>Profile</Link>
+            {/* Icône Panier avec notification */}
+            <div className="relative cursor-pointer">
+              <div className="cart-icon text-2xl">🛒</div>
+              {cartItemCount > 0 && (
+                <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItemCount}
+                </div>
+              )}
+            </div>
+            <button onClick={logout} className="logout-button bg-red-500 px-3 py-1 rounded">Logout</button>
+          </>
+        )}
 
-      {/* Affichage du rôle actuel */}
-      <div className="user-type">Connecté en tant que : {userType || "Not logged in"}</div>
+        {userType === USER_TYPES.ADMIN_USER && (
+          <>
+            <Link to="/admin" className={isActive("/admin")}>Admin Dashboard</Link>
+            <Link to="/myProfile" className={isActive("/myProfile")}>Profile</Link>
+            <button onClick={logout} className="logout-button bg-red-500 px-3 py-1 rounded">Logout</button>
+          </>
+        )}
+
+        {userType === USER_TYPES.PUBLIC && (
+          <>
+            <Link to="/" className={isActive("/")}>Home</Link>
+            <Link to="/login" className={isActive("/login")}>
+              <span className="flex items-center gap-1">
+              <span className="text-xl">👤</span>
+                <span>My Profile</span>
+              </span>
+            </Link>
+          </>
+        )}
+
+      </div>
     </div>
   );
 };

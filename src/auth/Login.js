@@ -41,7 +41,7 @@ const Login = () => {
 
     return (
         // Conteneur principal qui centre le formulaire sur l'écran avec un fond transparent
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-50 to-gray-50">
+        <div className="flex items-center justify-center min-h-[88vh] bg-gradient-to-r from-gray-50 to-gray-50">
 
             {/* Carte contenant le formulaire avec un fond blanc semi-transparent et un effet de flou */}
             <div className="p-8 rounded-lg shadow-lg w-96 bg-white/80 backdrop-blur-md">
