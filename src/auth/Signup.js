@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
@@ -58,7 +58,7 @@ const SignupPage = () => {
 
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-blue-700">
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-50 to-gray-50">
             <div className="bg-white rounded-2xl shadow-lg p-8 w-96 text-center">
                 <div className="flex justify-center mb-4">
                     <FaUser className="text-blue-600 text-4xl" />
@@ -111,6 +111,8 @@ const SignupPage = () => {
 
                 </form>
             </div>
+            {/* Notification Toast (messages d'erreur, succès, etc.) */}
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
         </div>
     );
 };

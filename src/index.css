@@ -15,3 +15,49 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* css navBar */
+.navbar {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  background-color: rgb(110,110,210);
+  color: white;
+  border-bottom: 1px solid red;
+  align-items: center;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.active-link {
+  background-color: rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+}
+
+.logout-button {
+  background-color: red;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.logout-button:hover {
+  background-color: darkred;
+}
+
+.user-type {
+  margin-left: auto;
+  font-style: italic;
+}
