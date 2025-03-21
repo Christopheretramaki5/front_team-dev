@@ -58,7 +58,7 @@ const SignupPage = () => {
 
 
     return (
-        <div className="flex items-center justify-center min-h-[88vh] bg-gradient-to-r from-gray-50 to-gray-50 overflow-hidden">
+        <div className="flex items-center justify-center min-h-[100vh] bg-gradient-to-r from-gray-50 to-gray-50 overflow-hidden">
             <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md text-center">
                 <div className="flex justify-center mb-4">
                     <FaUser className="text-blue-600 text-4xl" />

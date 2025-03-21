@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,31 +17,40 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Vérification des champs vides
+    
         let newErrors = { email: !email.trim(), password: !password.trim() };
         setErrors(newErrors);
-
+    
         if (newErrors.email || newErrors.password) {
             toast.error("Tous les champs sont obligatoires !");
             return;
         }
-
+    
         try {
-            login(email, password);
+            login(email, password); // Connexion
+    
+            // Déterminer la route de redirection en fonction du rôle
+            const userType = localStorage.getItem("userType"); // Récupérer le rôle
+    
+            let redirectPath = "/";
+            if (userType === "Admin User") {
+                redirectPath = "/admin";
+            } else if (userType === "Normal User") {
+                redirectPath = "/user";
+            }
+    
             toast.success("Connexion réussie !");
-
-            // Attendre 2 secondes avant la redirection
-            setTimeout(() => navigate("/"), 2000);
+            setTimeout(() => navigate(redirectPath), 2000); // Redirection après succès
         } catch (error) {
             toast.error("⚠️ Identifiants incorrects !");
-            setErrors({ email: true, password: true }); // Encadrer les champs en rouge
+            setErrors({ email: true, password: true });
         }
     };
+    
 
     return (
         // Conteneur principal qui centre le formulaire sur l'écran avec un fond transparent
-        <div className="flex items-center justify-center min-h-[88vh] bg-gradient-to-r from-gray-50 to-gray-50">
+        <div className="flex items-center justify-center min-h-[100vh] bg-gradient-to-r from-gray-50 to-gray-50">
 
             {/* Carte contenant le formulaire avec un fond blanc semi-transparent et un effet de flou */}
             <div className="p-8 rounded-lg shadow-lg w-96 bg-white/80 backdrop-blur-md">
@@ -104,13 +113,13 @@ const Login = () => {
                             <label htmlFor="remember" className="text-gray-600">Remember me</label>
                         </div>
                         {/* Lien vers la récupération du mot de passe */}
-                        <a href="#" className="text-blue-500">Forgot Password?</a>
+                        <Link href="#" className="text-[rgb(110,110,210)]">Forgot Password?</Link>
                     </div>
 
                     {/* Bouton de connexion */}
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
+                        className="w-full bg-[rgb(110,110,210)] text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
                     >
                         Login
                     </button>
@@ -118,7 +127,7 @@ const Login = () => {
                     {/* Lien vers la page d'inscription */}
                     <div className="mt-4 text-center">
                         <span className="text-sm text-gray-600">Pas encore inscrit? </span>
-                        <a href="/signup" className="text-blue-500 hover:underline">S'inscrire</a>
+                        <a href="/signup" className="text-[rgb(110,110,210)] hover:underline">S'inscrire</a>
                     </div>
                 </form>
             </div>
