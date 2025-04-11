@@ -10,7 +10,7 @@ export const Card = ({ children, className = '' }) => {
 
 export const CardContent = ({ children, className = '' }) => {
   return (
-    <div className={`p-4 ${className}`}>
+    <div className={`p-2 ${className}`}>
       {children}
     </div>
   );

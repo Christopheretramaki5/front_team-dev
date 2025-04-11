@@ -105,3 +105,21 @@ body {
     margin-left: 10px; /* Réduit l'espacement entre les icônes */
   }
 }
+/* Ajouter ce style dans votre fichier CSS si vous n'utilisez pas Tailwind */
+.spinner-border {
+  border: 2px solid transparent;
+  border-top: 2px solid #22c55e; /* Couleur verte */
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+}

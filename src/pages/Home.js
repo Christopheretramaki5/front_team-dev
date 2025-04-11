@@ -3,6 +3,9 @@ import NavBar from './NavBar';
 import ProductGrid from './ProductGrid';
 import { Button } from '../components/ui/Button';
 import { Rings } from 'react-loader-spinner';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,6 +39,15 @@ const Home = () => {
 
   const displayedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  const sliderSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    afterChange: (index) => handlePageChange(index + 1),
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 pt-40 flex">
@@ -80,35 +92,30 @@ const Home = () => {
               <Rings color="#7777ef" height={60} width={60} />
             </div>
           ) : (
-            <ProductGrid products={displayedProducts} />
+            <Slider {...sliderSettings}>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <div key={index}>
+                  <ProductGrid products={filteredProducts.slice(index * itemsPerPage, (index + 1) * itemsPerPage)} />
+                </div>
+              ))}
+            </Slider>
           )}
         </div>
 
-        {/* Pagination */}
-        <div className="flex justify-center items-center mt-8 mb-8">
-          <Button
-            className="mx-1 bg-gray-200 text-black"
-            onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-          >
-            Précédent
-          </Button>
-          {Array.from({ length: totalPages }, (_, index) => (
-            <Button
-              key={index}
-              className={`mx-1 ${currentPage === index + 1 ? 'bg-[#7777ef] text-white' : 'bg-gray-200 text-black'}`}
-              onClick={() => handlePageChange(index + 1)}
-            >
-              {index + 1}
-            </Button>
-          ))}
-          <Button
-            className="mx-1 bg-gray-200 text-black"
-            onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-          >
-            Suivant
-          </Button>
+        {/* Section Témoignages */}
+        <div className="bg-gray-200 py-16 text-center">
+          <h2 className="text-3xl font-bold">Ce que disent nos clients</h2>
+          <div className="flex justify-center mt-8 space-x-4">
+            {[
+              { name: 'Alice', feedback: 'Super produits, je recommande !' },
+              { name: 'Bob', feedback: 'Livraison rapide et service client au top.' },
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+                <p className="text-lg italic">"{testimonial.feedback}"</p>
+                <p className="mt-4 text-right font-bold">- {testimonial.name}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Section Informations */}

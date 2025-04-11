@@ -4,12 +4,13 @@ import Modal from "react-modal"; // Importation du modal
 import { useAuth, USER_TYPES } from "../contexts/AuthContext";
 import { FaSearch } from "react-icons/fa";
 import { ShoppingCart, User } from "lucide-react";
-import AdminPanel from "./AdminPanel";
 import { useCart } from "../contexts/CartContext";
+import { toast } from "react-toastify";
+import AdminLayout from "./adminPages/AdminLayout";
 
 Modal.setAppElement("#root"); // Configuration obligatoire pour react-modal
 
-const NavBar = () => {
+const NavBar = ({ darkMode }) => {
   const { userType, logout } = useAuth();
   const { cart } = useCart();
   const location = useLocation();
@@ -17,6 +18,7 @@ const NavBar = () => {
   const cartItemCount = cart.length;
   const [isModalOpen, setIsModalOpen] = useState(false); // État pour gérer l'affichage du modal
   const [isCartPopupOpen, setIsCartPopupOpen] = useState(false);
+
   // Gestion de la popup du panier
   const toggleCartPopup = () => setIsCartPopupOpen(!isCartPopupOpen);
   const closeCartPopup = () => setIsCartPopupOpen(false);
@@ -37,12 +39,20 @@ const NavBar = () => {
   const confirmLogout = () => {
     logout();
     setIsModalOpen(false);
+    toast.success("Déconnexion réussie !", {
+      className: "text-green-500 font-bold",
+      autoClose: 3000,
+    });
     navigate("/"); // Redirection après déconnexion
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-blue-600 text-white shadow-md">
-      <div className="navbar flex items-center justify-between p-4 w-full overflow-hidden">
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 shadow-md ${
+        darkMode ? "bg-gray-900 text-gray-100" : "bg-blue-600 text-white"
+      }`}
+    >
+      <div className="navbar flex items-center justify-between p-4 w-full overflow-hidden -mr-8">
         <div className="logo text-xl font-bold">E-Shop</div>
 
         {/* Barre de recherche centrée avec icône */}
@@ -51,17 +61,26 @@ const NavBar = () => {
             <input
               type="text"
               placeholder="Rechercher des produits..."
-              className="w-full p-2 pl-10 rounded-lg text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-2 pl-10 rounded-lg border focus:outline-none focus:ring-2 ${
+                darkMode
+                  ? "bg-gray-700 text-gray-200 border-gray-600 focus:ring-blue-400"
+                  : "bg-white text-black border-gray-300 focus:ring-blue-500"
+              }`}
             />
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            <FaSearch
+              className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                darkMode ? "text-gray-400" : "text-gray-500"
+              }`}
+            />
           </div>
         </div>
 
         <div className="nav-links flex items-center gap-4">
           {userType === USER_TYPES.NORMAL_USER && (
             <>
-              {/* <Link to="/" className={isActive("/")}>Home</Link> */}
-              <Link to="/user" className={isActive("/user")}>User Dashboard</Link>
+              <Link to="/user" className={isActive("/user")}>
+                User Dashboard
+              </Link>
               <Link to="/myProfile" className={isActive("/myProfile")}>
                 <span className="flex items-center gap-1">
                   <User size={20} />
@@ -79,16 +98,19 @@ const NavBar = () => {
                 )}
               </div>
 
-              {/* Bouton Déconnexion qui ouvre le modal */}
-              <button 
-                onClick={openModal} 
-                className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition">
+              {/* Bouton Déconnexion */}
+              <button
+                onClick={openModal}
+                className={`px-3 py-1 rounded transition ${
+                  darkMode ? "bg-red-600 hover:bg-red-700" : "bg-red-500 hover:bg-red-600"
+                }`}
+              >
                 Logout
               </button>
             </>
           )}
 
-          {userType === USER_TYPES.ADMIN_USER && <AdminPanel />}
+          {userType === USER_TYPES.ADMIN_USER && <AdminLayout />}
 
           {userType === USER_TYPES.PUBLIC && (
             <Link to={"/login"}>
@@ -106,25 +128,43 @@ const NavBar = () => {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Confirmation de Déconnexion"
-        className="modal-content bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto mt-40"
+        className={`modal-content p-6 rounded-lg shadow-lg max-w-sm mx-auto mt-40 ${
+          darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-700"
+        }`}
         overlayClassName="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
       >
-        <h2 className="text-lg font-semibold text-gray-700">Voulez-vous vraiment vous déconnecter ?</h2>
-        <div className="flex justify-end mt-4 space-x-2">
-          <button 
-            onClick={closeModal} 
-            className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition">
-            Annuler
-          </button>
-          <button 
-            onClick={confirmLogout} 
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
-            Se Déconnecter
-          </button>
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-4">
+            Voulez-vous vraiment vous déconnecter ?
+          </h2>
+          <p className="mb-6">Vous serez redirigé vers la page d'accueil après la déconnexion.</p>
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={closeModal}
+              className={`px-4 py-2 rounded transition ${
+                darkMode ? "bg-gray-600 hover:bg-gray-700" : "bg-gray-300 hover:bg-gray-400"
+              }`}
+            >
+              Non
+            </button>
+            <button
+              onClick={confirmLogout}
+              className={`px-4 py-2 rounded transition ${
+                darkMode ? "bg-red-600 hover:bg-red-700" : "bg-red-500 hover:bg-red-600"
+              }`}
+            >
+              Oui
+            </button>
+          </div>
         </div>
       </Modal>
-        {/* Menu secondaire (affiché sur grand écran, caché sur mobile) */}
-        <div className="bg-[rgb(110,110,210)] text-white py-2 flex justify-center space-x-6 hidden md:flex">
+
+      {/* Menu secondaire */}
+      <div
+        className={`py-2 flex justify-center space-x-6 hidden md:flex ${
+          darkMode ? "bg-gray-700 text-gray-300" : "bg-[rgb(110,110,210)] text-white"
+        }`}
+      >
         <button onClick={() => navigate("/promo")} className={isActive("/promo")}>
           Promo
         </button>
@@ -146,37 +186,41 @@ const NavBar = () => {
       </div>
 
       {/* Menu de catégories */}
-      <div className="bg-gray-100 py-2 flex justify-center space-x-4 text-black">
+      <div
+        className={`py-2 flex justify-center space-x-4 ${
+          darkMode ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-black"
+        }`}
+      >
         <button onClick={() => navigate("/")} className={isActive("/")}>
           Accueil
         </button>
         <button onClick={() => navigate("/jardin-animalerie")} className={isActive("/jardin-animalerie")}>
-          Jardin Animalerie
+          Fashion
         </button>
         <button onClick={() => navigate("/informatique")} className={isActive("/informatique")}>
-          Informatique
+          Electrinics
         </button>
         <button onClick={() => navigate("/electromenager")} className={isActive("/electromenager")}>
-          Électroménager
+          Groceries
         </button>
         <button onClick={() => navigate("/meuble-deco")} className={isActive("/meuble-deco")}>
-          Meuble Déco
+          Home & kitchen
         </button>
         <button onClick={() => navigate("/mode-bijoux")} className={isActive("/mode-bijoux")}>
-          Mode Bijoux
+          Beauty & Health
         </button>
         <button onClick={() => navigate("/jeux-video")} className={isActive("/jeux-video")}>
-          Jeux Vidéo
-        </button>
-        <button onClick={() => navigate("/bebe")} className={isActive("/bebe")}>
-          Bébé
+          Jewellery
         </button>
       </div>
+
       {isCartPopupOpen && (
         <div className="absolute top-16 right-4 w-80 bg-white shadow-lg rounded-lg p-4 z-50">
           <div className="flex justify-between items-center border-b pb-2">
             <h2 className="text-lg font-semibold text-gray-800">Mon Panier</h2>
-            <button onClick={closeCartPopup} className="text-gray-500 hover:text-gray-800">✖</button>
+            <button onClick={closeCartPopup} className="text-gray-500 hover:text-gray-800">
+              ✖
+            </button>
           </div>
 
           {cartItemCount > 0 ? (

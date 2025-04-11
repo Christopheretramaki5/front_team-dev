@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import logo from './logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { MdOutlineDashboard } from "react-icons/md";
 import { FaAngleRight, FaProductHunt } from "react-icons/fa";
@@ -10,9 +10,8 @@ import { IoSettings } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { BiSolidLogInCircle } from "react-icons/bi";
 import classNames from "classnames";
-import { RiLockPasswordLine, RiLogoutBoxRLine } from "react-icons/ri";
+import { RiLockPasswordLine} from "react-icons/ri";
 import { LuMessageSquareLock } from "react-icons/lu";
-import Swal from "sweetalert2";
 import { useAuth } from '../../contexts/AuthContext';
 
 
@@ -23,7 +22,12 @@ const SideBar = () => {
     const [isToggleSubmenu3, setIsToggleSubmenu3] = useState();
     const [isToggleSubmenu4, setIsToggleSubmenu4] = useState();
     const [isToggleSubmenu5, setIsToggleSubmenu5] = useState();
-    const { userType, logout } = useAuth();
+    const { userType } = useAuth();
+    const navigate = useNavigate();
+
+    const handleNavigation = (path) => {
+        navigate(path); // Navigue vers le chemin spécifié
+    };
 
     const openSubmenu = (index) => {
         setActiveTab(index);
@@ -47,36 +51,25 @@ const SideBar = () => {
         setIsToggleSubmenu5(!isToggleSubmenu5);
     };
 
-    const handleLogout = () => {
-        Swal.fire({
-            title: "Êtes-vous sûr ?",
-            text: "Vous allez être déconnecté !",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Oui, déconnecter",
-            cancelButtonText: "Annuler",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                logout(); // 🔥 Appelle directement la fonction logout
-            }
-        });
-    };
     useEffect(() => {
         console.log("🔄 Mise à jour de NavBar - UserType:", userType);
     }, [userType]);
     return (
-        <div className='sidebar fixed left-0 top-0 z-[100] w-[15%]'>
+        <div className='sidebar fixed left-0 top-0 z-[100] w-[15%] shadow-sm'>
             <Link>
-                <div className="logoWrapper py-3 px-3">
+                <div className="logoWrapper py-3 px-4">
                     <img src={logo} alt="" className='w-100' />
                 </div>
             </Link>
-            <div className='sidebarTab px-2 mt-2'>
+            <div className='sidebarTab px-2 mt-6'>
                 <ul className='flex gap-2 flex-col group'>
                     <li>
-                        <Button className={`w-full ${activeTab === 0 ? 'active' : ''}`} onClick={() => openSubmenu(0)}>
+                        <Button className={`w-full ${activeTab === 0 ? 'active' : ''}`}
+                            onClick={() => {
+                                openSubmenu(0); // Gère l'ouverture du sous-menu
+                                handleNavigation('/admin'); // Navigue vers la page Dashboard
+                            }}
+                        >
                             <span className='icon mr-3 w-[25px] h-[25px] flex items-center justify-center rounded-md'>
                                 <MdOutlineDashboard />
                             </span>
@@ -96,9 +89,9 @@ const SideBar = () => {
 
                         {/* Sous-menu avec affichage conditionnel */}
                         <div className={classNames("submenu", { hidden: !(activeTab === 1 && isToggleSubmenu) })}>
-                            <Button className='w-full'>Produit list</Button>
-                            <Button className='w-full'>Produit details</Button>
-                            <Button className='w-full'>Produit upload</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/products/list')}>Liste des produits</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/products/details')}>Détails du produit</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/products/upload')}>Ajouter un produit</Button>
                         </div>
                     </li>
                     <li className={`${activeTab === 2 && isToggleSubmenu2 === true ? 'colapse' : 'colapsed'}`}>
@@ -112,8 +105,12 @@ const SideBar = () => {
                             </span>
                         </Button>
                         <div className={classNames("submenu", { hidden: !(activeTab === 2 && isToggleSubmenu2) })}>
-                            <Button className='w-full'>Liste des clients</Button>
-                            <Button className='w-full'>Détails du client</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/clients/list')}>
+                                Liste des clients
+                            </Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/clients/details')}>
+                                Détails du client
+                            </Button>
                         </div>
                     </li>
                     <li className={`${activeTab === 3 && isToggleSubmenu3 === true ? 'colapse' : 'colapsed'}`}>
@@ -127,8 +124,12 @@ const SideBar = () => {
                             </span>
                         </Button>
                         <div className={classNames("submenu", { hidden: !(activeTab === 3 && isToggleSubmenu3) })}>
-                            <Button className='w-full'>Fournisseur list</Button>
-                            <Button className='w-full'>Fournisseur details</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/suppliers/list')}>
+                                Liste des fournisseurs
+                            </Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/suppliers/details')}>
+                                Détails du fournisseur
+                            </Button>
                         </div>
                     </li>
                     <li className={`${activeTab === 4 && isToggleSubmenu4 === true ? 'colapse' : 'colapsed'}`}>
@@ -142,8 +143,8 @@ const SideBar = () => {
                             </span>
                         </Button>
                         <div className={classNames("submenu", { hidden: !(activeTab === 4 && isToggleSubmenu4) })}>
-                            <Button className='w-full'>Vente list</Button>
-                            <Button className='w-full'>Vente details</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/ventes/list')}>Vente list</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/ventes/details')}>Vente details</Button>
                         </div>
                     </li>
 
@@ -153,18 +154,21 @@ const SideBar = () => {
                                 <FaCartArrowDown />
                             </span>
                             Achats
-                            <span className={`arrow ml-auto w-[25px] h-[25px] flex items-center justify-center ${activeTab === 5 && isToggleSubmenu5 === true? 'rotate' : ''}`}>
+                            <span className={`arrow ml-auto w-[25px] h-[25px] flex items-center justify-center ${activeTab === 5 && isToggleSubmenu5 === true ? 'rotate' : ''}`}>
                                 <FaAngleRight />
                             </span>
                         </Button>
                         <div className={classNames("submenu", { hidden: !(activeTab === 5 && isToggleSubmenu5) })}>
-                            <Button className='w-full'>Liste achats</Button>
-                            <Button className='w-full'>Statistiques</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/achats/list')}>Liste achats</Button>
+                            <Button className='w-full' onClick={() => handleNavigation('/admin/achats/statistique')}>Statistiques</Button>
                         </div>
                     </li>
 
                     <li>
-                        <Button className={`w-full ${activeTab === 6 ? 'active' : ''}`} onClick={() => openSubmenu(6)}>
+                        <Button className={`w-full ${activeTab === 6 ? 'active' : ''}`} 
+                        onClick={() => {
+                            openSubmenu(6);
+                            handleNavigation('/admin/setting'); }}>
                             <span className='icon mr-3 w-[25px] h-[25px] flex items-center justify-center rounded-md'>
                                 <IoSettings />
                             </span>
@@ -176,17 +180,23 @@ const SideBar = () => {
                         <h2 className='text-black/70 capitalize px-3 mt-4'>AUTHENTIFICATION</h2>
                     </li>
 
-                    <li>
-                        <Button className={`w-full ${activeTab === 7 ? 'active' : ''}`} onClick={() => openSubmenu(7)}>
+                    {/* <li>
+                        <Button className={`w-full ${activeTab === 7 ? 'active' : ''}`} 
+                        onClick={() => {
+                            openSubmenu(7);
+                            handleNavigation('/login'); }}>
                             <span className='icon mr-3 w-[25px] h-[25px] flex items-center justify-center rounded-md'>
                                 <BiSolidLogInCircle />
                             </span>
                             Login
                         </Button>
-                    </li>
+                    </li> */}
 
                     <li>
-                        <Button className={`w-full ${activeTab === 8 ? 'active' : ''}`} onClick={() => openSubmenu(8)}>
+                        <Button className={`w-full ${activeTab === 8 ? 'active' : ''}`} 
+                        onClick={() => {openSubmenu(8);
+                            handleNavigation('/admin/inscription');
+                        }}>
                             <span className='icon mr-3 w-[25px] h-[25px] flex items-center justify-center rounded-md'>
                                 <FaUser />
                             </span>
@@ -195,7 +205,10 @@ const SideBar = () => {
                     </li>
 
                     <li>
-                        <Button className={`w-full ${activeTab === 9 ? 'active' : ''}`} onClick={() => openSubmenu(9)}>
+                        <Button className={`w-full ${activeTab === 9 ? 'active' : ''}`} 
+                        onClick={() => {openSubmenu(9);
+                            handleNavigation('/admin/forget-password');
+                        }}>
                             <span className='icon mr-3 w-[25px] h-[25px] flex items-center justify-center rounded-md'>
                                 <RiLockPasswordLine />
                             </span>
@@ -204,28 +217,16 @@ const SideBar = () => {
                     </li>
 
                     <li>
-                        <Button className={`w-full ${activeTab === 10 ? 'active' : ''}`} onClick={() => openSubmenu(10)}>
+                        <Button className={`w-full ${activeTab === 10 ? 'active' : ''}`} 
+                        onClick={() => {openSubmenu(10);
+                            handleNavigation('/admin/otp-pages');
+                        }}>
                             <span className='icon mr-3 w-[25px] h-[25px] flex items-center justify-center rounded-md'>
                                 <LuMessageSquareLock />
                             </span>
                             OTP Pages
                         </Button>
                     </li>
-
-                    {/* <li className='deconnexion border-red-600'>
-                        <Button
-                            className={`w-full flex items-center justify-start px-4 py-2 rounded-lg 
-                            text-white font-medium transition-all duration-300 
-                            ${activeTab === 10 ? "deconnexion bg-red-600 shadow-lg" : "bg-red-500"} 
-                            hover:bg-red-700 hover:shadow-xl active:scale-95`}
-                            onClick={handleLogout}
-                        >
-                            <span className="mr-3 w-[30px] h-[30px] flex items-center justify-center rounded-md bg-red-600">
-                                <RiLogoutBoxRLine className="text-white text-xl" />
-                            </span>
-                            Déconnexion
-                        </Button>
-                    </li> */}
                 </ul>
 
             </div>

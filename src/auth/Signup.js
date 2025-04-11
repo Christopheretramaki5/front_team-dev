@@ -8,46 +8,70 @@ const SignupPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
+    
     const validateForm = () => {
-        let newErrors = {};
-
-        if (!username) newErrors.username = "Nom d'utilisateur requis";
-        if (!email) {
-            newErrors.email = "Email requis";
-        } else {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) newErrors.email = "Email invalide";
-        }
-        if (!password) newErrors.password = "Mot de passe requis";
-        if (!confirmPassword) newErrors.confirmPassword = "Confirmer le mot de passe";
-        if (password && confirmPassword && password !== confirmPassword) {
-            newErrors.confirmPassword = "Les mots de passe ne correspondent pas";
-        }
-
-        setErrors(newErrors);
-
-        if (Object.keys(newErrors).length > 0) {
-            Object.values(newErrors).forEach((msg) => toast.error(msg));
+        if (!username) {
+            toast.error("Nom d'utilisateur requis");
             return false;
         }
-
-        return true;
+    
+        if (!email) {
+            toast.error("Email requis");
+            return false;
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                toast.error("Email invalide");
+                return false;
+            }
+        }
+    
+        if (!password) {
+            toast.error("Mot de passe requis");
+            return false;
+        }
+    
+        if (!confirmPassword) {
+            toast.error("Confirmer le mot de passe");
+            return false;
+        }
+    
+        if (password !== confirmPassword) {
+            toast.error("Les mots de passe ne correspondent pas");
+            return false;
+        }
+    
+        return true; // Si tout est valide
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!validateForm()) return;
-
+    
+        const toastId = toast.loading("Inscription en cours..."); // Affiche un toast de chargement
+    
         try {
-            toast.success("Inscription réussie ! Redirection...");
-            setTimeout(() => navigate("/login"), 2000);
+            // Simuler une inscription réussie
+            setTimeout(() => {
+                toast.update(toastId, {
+                    render: "Inscription réussie ! Redirection...",
+                    type: "success",
+                    isLoading: false, // Désactive l'état de chargement
+                    autoClose: 5000,
+                });
+                navigate("/login");
+            }, 2000);
         } catch (error) {
-            toast.error("Erreur lors de l'inscription : " + error.message);
+            toast.update(toastId, {
+                render: "Erreur lors de l'inscription : " + error.message,
+                type: "error",
+                isLoading: false, // Désactive l'état de chargement
+                autoClose: 5000,
+            });
         }
     };
 
